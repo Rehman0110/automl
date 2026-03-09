@@ -47,7 +47,7 @@ def run_automl(df, target_column):
             params,
             n_iter=10,
             cv=3,
-            n_jobs=-1
+            n_jobs=-1,
             random_state=42
         )
 
