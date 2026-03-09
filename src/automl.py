@@ -45,8 +45,10 @@ def run_automl(df, target_column):
         grid = RandomizedSearchCV(
             pipeline,
             params,
-            cv=2,
+            n_iter=10,
+            cv=3,
             n_jobs=-1
+            random_state=42
         )
 
         grid.fit(X_train, y_train)
