@@ -3,6 +3,8 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, r2_score
 import pandas as pd
+import itertools
+
 from src.models import get_models
 from src.preprocessing import build_preprocessor
 
@@ -23,7 +25,6 @@ def run_automl(df, target_column):
     problem_type = detect_problem_type(y)
 
     preprocessor = build_preprocessor(X)
-
     models = get_models(problem_type)
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -42,10 +43,17 @@ def run_automl(df, target_column):
             ("model", model)
         ])
 
+        # calculate parameter space size
+        param_space = 1
+        for v in params.values():
+            param_space *= len(v)
+
+        n_iter = min(10, param_space)
+
         grid = RandomizedSearchCV(
             pipeline,
             params,
-            n_iter=10,
+            n_iter=n_iter,
             cv=3,
             n_jobs=-1,
             random_state=42
